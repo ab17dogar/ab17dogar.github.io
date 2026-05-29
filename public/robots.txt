@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ab17dogar.github.io/sitemap-index.xml
