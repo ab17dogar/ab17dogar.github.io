@@ -1,7 +1,56 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroBento from '../components/HeroBento.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import AboutTeaser from '../components/AboutTeaser.astro';
+import SkillsGrid from '../components/SkillsGrid.tsx';
+import ProjectGrid from '../components/ProjectGrid.tsx';
+import ResearchList from '../components/ResearchList.astro';
+import BlogList from '../components/BlogList.astro';
+import ContactCTA from '../components/ContactCTA.astro';
+import { siteData } from '../data/siteData';
+import { sortByDateDesc } from '../lib/format';
+
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 4)
+  .map((p) => ({
+    title: p.data.title,
+    summary: p.data.summary,
+    tags: p.data.tags,
+    stack: p.data.stack,
+    href: `/work/${p.id}`,
+    repo: p.data.repo,
+    demo: p.data.demo,
+  }));
+
+const research = (await getCollection('research'))
+  .sort((a, b) => b.data.year - a.data.year)
+  .slice(0, 2);
+
+const posts = sortByDateDesc(
+  (await getCollection('posts')).filter((p) => !p.data.draft),
+  (p) => p.data.date,
+).slice(0, 3);
 ---
 <BaseLayout>
   <HeroBento />
+
+  <AboutTeaser />
+
+  <SectionHeader title="Stack & tools" note="// what i reach for" />
+  <SkillsGrid client:visible skills={[...siteData.skills]} />
+
+  <SectionHeader title="Featured work" note="view all →" href="/work" />
+  <ProjectGrid client:visible projects={projects} />
+
+  <SectionHeader title="Research" note="view all →" href="/research" />
+  <ResearchList items={research} />
+
+  <SectionHeader title="Writing" note="view all →" href="/writing" />
+  <BlogList posts={posts} />
+
+  <ContactCTA />
 </BaseLayout>
