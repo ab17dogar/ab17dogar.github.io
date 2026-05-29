@@ -1,6 +1,78 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+
+@theme {
+  /* Colors (semantic) */
+  --color-bg: #06060d;
+  --color-surface: rgba(255, 255, 255, 0.04);
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-text: #f8fafc;
+  --color-muted: #94a3b8;
+  --color-primary: #a78bfa;
+  --color-accent: #22d3ee;
+  --color-success: #22c55e;
+  --color-code: #f0abfc;
+
+  /* Fonts (Inter as display+body fallback for Geist; JetBrains Mono for mono) */
+  --font-sans: "Inter Variable", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Radii */
+  --radius-tile: 14px;
+  --radius-chip: 4px;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 
 body {
-  background-color: #06060d;
-  color: #f8fafc;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "tnum";
+}
+
+/* Headline gradient text */
+.text-gradient {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Glass tile */
+.glass {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  backdrop-filter: blur(16px);
+  border-radius: var(--radius-tile);
+}
+
+/* Focus ring */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Drifting blobs (disabled under reduced motion via the media query above) */
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(3%, 4%) scale(1.08); }
 }

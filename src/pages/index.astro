@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import BackgroundFX from '../components/BackgroundFX.astro';
 ---
 <html lang="en">
   <head>
@@ -8,8 +9,11 @@ import '../styles/global.css';
     <title>Abu Bakar</title>
   </head>
   <body>
+    <BackgroundFX />
     <main class="p-8">
-      <h1 class="text-3xl font-bold">Scaffold OK</h1>
+      <h1 class="text-4xl font-bold text-gradient">Tokens OK</h1>
+      <p class="mt-4 font-mono text-muted">// background + gradient + glass</p>
+      <div class="glass mt-6 p-6 max-w-sm">Glass tile</div>
     </main>
   </body>
 </html>

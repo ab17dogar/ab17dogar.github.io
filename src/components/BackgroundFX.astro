@@ -1,0 +1,25 @@
+---
+// Fixed full-viewport decorative background: masked grid + two drifting gradient blobs.
+// Purely decorative -> aria-hidden.
+---
+<div aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+  <div
+    class="absolute inset-0"
+    style="
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+    "
+  ></div>
+  <div
+    class="absolute -left-1/4 -top-1/4 h-[60vmax] w-[60vmax] rounded-full"
+    style="background: radial-gradient(circle, rgba(167,139,250,0.22), transparent 60%); animation: drift 18s ease-in-out infinite;"
+  ></div>
+  <div
+    class="absolute -bottom-1/4 -right-1/4 h-[55vmax] w-[55vmax] rounded-full"
+    style="background: radial-gradient(circle, rgba(34,211,238,0.16), transparent 60%); animation: drift 22s ease-in-out infinite reverse;"
+  ></div>
+</div>
