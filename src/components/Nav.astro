@@ -1,0 +1,43 @@
+---
+import { siteData } from '../data/siteData';
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || path.startsWith(href + '/');
+---
+<header class="sticky top-0 z-40 border-b border-line bg-bg/70 backdrop-blur-xl">
+  <nav class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+    <a href="/" class="flex items-center gap-2 font-bold">
+      <span class="h-2.5 w-2.5 rounded-full" style="background:linear-gradient(135deg,#a78bfa,#22d3ee);box-shadow:0 0 12px rgba(167,139,250,.6)"></span>
+      <span>abu<span class="text-gradient">bakar</span></span>
+    </a>
+
+    <ul class="hidden items-center gap-7 font-mono text-sm md:flex">
+      {siteData.nav.map((n) => (
+        <li>
+          <a
+            href={n.href}
+            class:list={['transition-colors hover:text-text', isActive(n.href) ? 'text-text' : 'text-muted']}
+            aria-current={isActive(n.href) ? 'page' : undefined}
+          >{n.label}</a>
+        </li>
+      ))}
+    </ul>
+
+    <a
+      href={`mailto:${siteData.email}`}
+      class="hidden rounded-lg border border-primary/40 bg-primary/15 px-3.5 py-1.5 text-sm text-primary transition-colors hover:bg-primary/25 md:inline-block"
+    >say hi →</a>
+
+    <input type="checkbox" id="nav-toggle" class="peer hidden" />
+    <label for="nav-toggle" class="cursor-pointer md:hidden" aria-label="Toggle menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </label>
+    <div class="absolute inset-x-0 top-full hidden border-b border-line bg-bg/95 px-5 py-4 backdrop-blur-xl peer-checked:block md:!hidden">
+      <ul class="flex flex-col gap-4 font-mono text-base">
+        {siteData.nav.map((n) => (
+          <li><a href={n.href} class:list={[isActive(n.href) ? 'text-text' : 'text-muted']}>{n.label}</a></li>
+        ))}
+        <li><a href={`mailto:${siteData.email}`} class="text-primary">say hi →</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>

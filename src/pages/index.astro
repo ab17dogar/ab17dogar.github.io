@@ -1,19 +1,9 @@
 ---
-import '../styles/global.css';
-import BackgroundFX from '../components/BackgroundFX.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Abu Bakar</title>
-  </head>
-  <body>
-    <BackgroundFX />
-    <main class="p-8">
-      <h1 class="text-4xl font-bold text-gradient">Tokens OK</h1>
-      <p class="mt-4 font-mono text-muted">// background + gradient + glass</p>
-      <div class="glass mt-6 p-6 max-w-sm">Glass tile</div>
-    </main>
-  </body>
-</html>
+<BaseLayout>
+  <section class="py-20">
+    <h1 class="text-5xl font-bold tracking-tight">Layout <span class="text-gradient">OK</span></h1>
+    <p class="mt-4 text-muted">Nav, footer, background, SEO wired.</p>
+  </section>
+</BaseLayout>
