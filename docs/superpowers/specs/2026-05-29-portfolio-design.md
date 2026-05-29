@@ -118,8 +118,11 @@ Frontmatter is schema-validated via Astro content collections (`zod`) — malfor
 - Affiliation: Universität Rostock
 - LinkedIn: https://www.linkedin.com/in/abdogar17/
 - GitHub: https://github.com/ab17dogar
-- Email: abu.bakar@uni-rostock.de
-- Seed research entry: AutoFish fish-length estimation (baseline CNN vs Vision Foundation Model encoder).
+- Email (public contact, shown on site): 10abdogar@gmail.com
+- Focus areas / domains (drive the skills grid + section framing, no single hard-coded topic): AI/ML · Computer Vision · LLMs · Cloud Engineering · Distributed Systems.
+- Research/project entries are authored by the user as content files; ship the collections with generic example entries reflecting the focus areas above rather than one specific seeded topic.
+
+> Note: git commit authorship stays on `abu.bakar@uni-rostock.de` (NOT the public Gmail), to keep commits attributed to the `ab17dogar` GitHub account.
 
 ## 7. Component Structure
 
