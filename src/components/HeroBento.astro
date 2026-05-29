@@ -1,0 +1,43 @@
+---
+import { siteData } from '../data/siteData';
+import RotatingRole from './react/RotatingRole.tsx';
+import CountUp from './react/CountUp.tsx';
+import Reveal from './react/Reveal.tsx';
+---
+<section class="py-14 sm:py-20">
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-[1.4fr_1fr] md:grid-rows-2">
+    <!-- Main tile -->
+    <Reveal client:load className="glass relative row-span-2 overflow-hidden p-7 sm:p-9">
+      <div class="absolute -right-1/5 -top-2/5 h-[120%] w-3/5" style="background:radial-gradient(circle,rgba(167,139,250,.30),transparent 60%)"></div>
+      {siteData.available && (
+        <span class="relative inline-flex items-center gap-2 rounded-full border border-success/40 bg-success/15 px-3 py-1 font-mono text-xs text-success">
+          <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-success" style="box-shadow:0 0 8px #22c55e"></span>
+          Available for ML / AI roles · 2026
+        </span>
+      )}
+      <h1 class="relative mt-4 text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+        Building <span class="text-gradient">intelligent</span> systems.
+      </h1>
+      <p class="relative mt-5 max-w-xl text-base text-muted sm:text-lg">{siteData.bio}</p>
+      <p class="relative mt-6 font-mono text-sm text-muted">
+        <span class="text-accent">$</span> role:
+        <RotatingRole client:visible roles={[...siteData.roles]} className="text-text" />
+      </p>
+    </Reveal>
+
+    <!-- Stat tiles -->
+    {siteData.stats.map((stat, idx) => (
+      <Reveal client:load delay={0.1 + idx * 0.08} className="glass p-6">
+        <p class="font-mono text-xs uppercase tracking-[0.12em] text-muted">// {stat.key}</p>
+        {/^\d/.test(stat.value) ? (
+          <p class="mt-2 text-3xl font-bold">
+            <CountUp client:visible to={parseInt(stat.value, 10)} suffix={stat.value.replace(/^\d+/, '')} />
+          </p>
+        ) : (
+          <p class="mt-2 text-xl font-bold leading-snug">{stat.value}</p>
+        )}
+        <p class="mt-1 text-sm text-muted">{stat.sub}</p>
+      </Reveal>
+    ))}
+  </div>
+</section>
