@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectGrid from '../../components/ProjectGrid.tsx';
+
+const projects = (await getCollection('projects'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((p) => ({
+    title: p.data.title,
+    summary: p.data.summary,
+    tags: p.data.tags,
+    stack: p.data.stack,
+    href: `/work/${p.id}`,
+    repo: p.data.repo,
+    demo: p.data.demo,
+  }));
+---
+<BaseLayout title="Work" description="Selected projects across ML, computer vision, LLMs, web, and cloud.">
+  <section class="py-14">
+    <h1 class="text-4xl font-bold tracking-tight">Work</h1>
+    <p class="mt-3 text-muted">Selected projects. Filter by area.</p>
+    <div class="mt-10">
+      <ProjectGrid client:load projects={projects} filterable />
+    </div>
+  </section>
+</BaseLayout>
