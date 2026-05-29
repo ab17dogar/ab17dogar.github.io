@@ -34,7 +34,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     <div class="absolute inset-x-0 top-full hidden border-b border-line bg-bg/95 px-5 py-4 backdrop-blur-xl peer-checked:block md:!hidden">
       <ul class="flex flex-col gap-4 font-mono text-base">
         {siteData.nav.map((n) => (
-          <li><a href={n.href} class:list={[isActive(n.href) ? 'text-text' : 'text-muted']}>{n.label}</a></li>
+          <li><a href={n.href} class:list={[isActive(n.href) ? 'text-text' : 'text-muted']} aria-current={isActive(n.href) ? 'page' : undefined}>{n.label}</a></li>
         ))}
         <li><a href={`mailto:${siteData.email}`} class="text-primary">say hi →</a></li>
       </ul>
