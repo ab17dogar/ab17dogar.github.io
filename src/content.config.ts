@@ -6,7 +6,7 @@ const projects = defineCollection({
   schema: z.object({
     title: z.string(),
     summary: z.string(),
-    tags: z.array(z.enum(['ML', 'Web', 'Research', 'Cloud', 'LLM', 'CV'])),
+    tags: z.array(z.enum(['ML', 'Web', 'Research', 'Cloud', 'LLM', 'CV', 'Graphics'])),
     stack: z.array(z.string()),
     repo: z.string().url().optional(),
     demo: z.string().url().optional(),

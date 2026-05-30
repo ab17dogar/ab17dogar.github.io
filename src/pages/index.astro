@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroBento from '../components/HeroBento.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import AboutTeaser from '../components/AboutTeaser.astro';
+import Experience from '../components/Experience.astro';
 import SkillsGrid from '../components/SkillsGrid.tsx';
 import ProjectGrid from '../components/ProjectGrid.tsx';
 import ResearchList from '../components/ResearchList.astro';
@@ -13,9 +14,7 @@ import { siteData } from '../data/siteData';
 import { sortByDateDesc } from '../lib/format';
 
 const projects = (await getCollection('projects'))
-  .filter((p) => p.data.featured)
   .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 4)
   .map((p) => ({
     title: p.data.title,
     summary: p.data.summary,
@@ -26,31 +25,44 @@ const projects = (await getCollection('projects'))
     demo: p.data.demo,
   }));
 
-const research = (await getCollection('research'))
-  .sort((a, b) => b.data.year - a.data.year)
-  .slice(0, 2);
+const research = (await getCollection('research')).sort((a, b) => b.data.year - a.data.year);
 
 const posts = sortByDateDesc(
   (await getCollection('posts')).filter((p) => !p.data.draft),
   (p) => p.data.date,
-).slice(0, 3);
+).slice(0, 4);
 ---
 <BaseLayout>
   <HeroBento />
 
-  <AboutTeaser />
+  <section id="about" class="scroll-mt-24">
+    <SectionHeader title="About" note="// who i am" />
+    <AboutTeaser />
+  </section>
 
-  <SectionHeader title="Stack & tools" note="// what i reach for" />
-  <SkillsGrid client:visible skills={[...siteData.skills]} />
+  <section id="experience" class="scroll-mt-24">
+    <SectionHeader title="Experience" note="// where i've worked" />
+    <Experience />
+  </section>
 
-  <SectionHeader title="Featured work" note="view all →" href="/work" />
-  <ProjectGrid client:visible projects={projects} />
+  <section id="projects" class="scroll-mt-24">
+    <SectionHeader title="Projects" note="// selected builds" />
+    <ProjectGrid client:visible projects={projects} />
+  </section>
 
-  <SectionHeader title="Research" note="view all →" href="/research" />
-  <ResearchList items={research} />
+  <section id="research" class="scroll-mt-24">
+    <SectionHeader title="Research & Writing" note="// research + notes" />
+    <ResearchList items={research} />
+    <h3 class="mb-4 mt-12 font-mono text-xs uppercase tracking-[0.12em] text-muted">// writing</h3>
+    <BlogList posts={posts} />
+  </section>
 
-  <SectionHeader title="Writing" note="view all →" href="/writing" />
-  <BlogList posts={posts} />
+  <section id="skills" class="scroll-mt-24">
+    <SectionHeader title="Skills" note="// what i use" />
+    <SkillsGrid client:visible categories={[...siteData.skills]} />
+  </section>
 
-  <ContactCTA />
+  <section id="contact" class="scroll-mt-24">
+    <ContactCTA />
+  </section>
 </BaseLayout>

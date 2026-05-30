@@ -13,7 +13,7 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
 <BaseLayout title={entry.data.title} description={entry.data.description}>
   <article class="py-14">
-    <a href="/writing" class="font-mono text-xs text-muted hover:text-text">← all writing</a>
+    <a href="/#research" class="font-mono text-xs text-muted hover:text-text">← back</a>
     <h1 class="mt-6 text-4xl font-bold tracking-tight">{entry.data.title}</h1>
     <p class="mt-3 flex gap-3 font-mono text-xs text-muted">
       <time datetime={entry.data.date.toISOString()}>{formatDate(entry.data.date)}</time>

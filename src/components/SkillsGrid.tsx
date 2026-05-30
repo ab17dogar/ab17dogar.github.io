@@ -1,32 +1,36 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import type { Skill } from '../data/siteData';
+import type { SkillCat } from '../data/siteData';
 
-interface Props { skills: Skill[] }
+interface Props { categories: SkillCat[] }
 
-export default function SkillsGrid({ skills }: Props) {
+export default function SkillsGrid({ categories }: Props) {
   const reduce = useReducedMotion();
   return (
-    <ul className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 md:grid-cols-6">
-      {skills.map((skill, i) => (
-        <motion.li
-          key={skill.name}
-          initial={reduce ? false : { opacity: 0, y: 12 }}
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {categories.map((cat, i) => (
+        <motion.div
+          key={cat.name}
+          initial={reduce ? false : { opacity: 0, y: 16 }}
           whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.35, delay: Math.min(i * 0.04, 0.4), ease: 'easeOut' }}
-          className={[
-            'group flex aspect-square items-center justify-center rounded-xl border text-center font-mono text-xs transition-colors',
-            skill.level === 'core'
-              ? 'border-primary/30 bg-gradient-to-br from-primary/15 to-accent/10 text-text'
-              : 'border-line bg-white/[0.03] text-muted hover:border-primary/40 hover:text-text',
-          ].join(' ')}
-          title={`${skill.name} · ${skill.level}`}
+          viewport={{ once: true, margin: '-10% 0px' }}
+          transition={{ duration: 0.4, delay: Math.min(i * 0.06, 0.4), ease: 'easeOut' }}
+          className="rounded-2xl border border-line bg-white/[0.04] p-6 backdrop-blur-md transition-colors hover:border-primary/40"
         >
-          <motion.span whileHover={reduce ? undefined : { scale: 1.08 }} className="px-1">
-            {skill.name}
-          </motion.span>
-        </motion.li>
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
+            // {cat.name}
+          </p>
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {cat.items.map((item) => (
+              <li
+                key={item}
+                className="rounded-full border border-line bg-white/[0.03] px-3 py-1 font-mono text-xs text-muted transition-colors hover:border-primary/40 hover:text-text"
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+        </motion.div>
       ))}
-    </ul>
+    </div>
   );
 }
