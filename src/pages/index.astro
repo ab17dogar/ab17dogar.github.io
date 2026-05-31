@@ -9,6 +9,7 @@ import SkillsGrid from '../components/SkillsGrid.tsx';
 import ProjectGrid from '../components/ProjectGrid.tsx';
 import ResearchList from '../components/ResearchList.astro';
 import ContactCTA from '../components/ContactCTA.astro';
+import ContactForm from '../components/ContactForm.astro';
 import { siteData } from '../data/siteData';
 import { getGithubProjects } from '../lib/github-projects';
 
@@ -57,5 +58,6 @@ const research = (await getCollection('research')).sort((a, b) => b.data.year - 
 
   <section id="contact" class="scroll-mt-24">
     <ContactCTA />
+    <ContactForm />
   </section>
 </BaseLayout>

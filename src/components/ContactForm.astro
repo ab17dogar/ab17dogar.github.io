@@ -1,0 +1,80 @@
+---
+import { siteData } from '../data/siteData';
+const key = siteData.contactAccessKey;
+const inputClass =
+  'w-full rounded-lg border border-line bg-white/[0.03] px-3.5 py-2.5 text-sm text-text placeholder:text-muted/70 transition-colors focus:border-primary/50 focus:outline-none';
+---
+<form id="contact-form" class="glass mt-6 grid gap-4 p-6 sm:p-7">
+  <!-- honeypot (spam trap) -->
+  <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div class="grid gap-1.5">
+      <label for="cf-name" class="font-mono text-xs uppercase tracking-[0.1em] text-muted">Name</label>
+      <input id="cf-name" name="name" type="text" required placeholder="Your name" class={inputClass} />
+    </div>
+    <div class="grid gap-1.5">
+      <label for="cf-email" class="font-mono text-xs uppercase tracking-[0.1em] text-muted">Email</label>
+      <input id="cf-email" name="email" type="email" required placeholder="you@example.com" class={inputClass} />
+    </div>
+  </div>
+
+  <div class="grid gap-1.5">
+    <label for="cf-message" class="font-mono text-xs uppercase tracking-[0.1em] text-muted">Message</label>
+    <textarea id="cf-message" name="message" required rows="5" placeholder="What would you like to talk about?" class={inputClass}></textarea>
+  </div>
+
+  <div class="flex items-center gap-4">
+    <button type="submit" class="rounded-lg border border-primary/40 bg-primary/15 px-5 py-2.5 font-mono text-sm text-primary transition-colors hover:bg-primary/25 disabled:opacity-50">
+      Send message →
+    </button>
+    <p id="contact-status" class="font-mono text-xs text-muted" role="status" aria-live="polite"></p>
+  </div>
+</form>
+
+<script define:vars={{ key, email: siteData.email }}>
+  const form = document.getElementById('contact-form');
+  const status = document.getElementById('contact-status');
+  const btn = form?.querySelector('button[type="submit"]');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form));
+    if (data.botcheck) return; // bot filled the honeypot
+
+    // Fallback: no Web3Forms key configured -> open the visitor's email client.
+    if (!key) {
+      const subject = encodeURIComponent(`Portfolio contact from ${data.name || ''}`);
+      const body = encodeURIComponent(`${data.message || ''}\n\nFrom: ${data.name || ''} <${data.email || ''}>`);
+      window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+      return;
+    }
+
+    status.textContent = 'Sending…';
+    if (btn) btn.disabled = true;
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: key,
+          subject: `Portfolio contact from ${data.name}`,
+          name: data.name,
+          email: data.email,
+          message: data.message,
+        }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        status.textContent = 'Thanks — your message was sent.';
+        form.reset();
+      } else {
+        status.textContent = 'Something went wrong. Please email me directly.';
+      }
+    } catch {
+      status.textContent = 'Network error. Please email me directly.';
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  });
+</script>

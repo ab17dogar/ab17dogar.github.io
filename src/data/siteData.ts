@@ -17,6 +17,11 @@ export const siteData = {
   resumeUrl: '/resume.pdf',
   available: true,
 
+  // Web3Forms access key for the contact form (public by design).
+  // Get a free key at https://web3forms.com (enter your email). Until set, the
+  // contact form gracefully falls back to opening the visitor's email client.
+  contactAccessKey: '',
+
   // Hero
   roles: ['Backend Engineer', 'Cloud Engineer', 'Graphics & 3D', 'Researcher'],
   bio: 'Backend software engineer with 2+ years building distributed systems and cloud services — now a Research Assistant at Universität Rostock, pivoting into AI, computer vision, and 3D graphics.',
