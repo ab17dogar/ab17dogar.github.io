@@ -1,15 +1,16 @@
 import matter from 'gray-matter';
 
 // Build-time sync of portfolio projects from GitHub.
-// A repo is shown as a project ONLY if it contains a `portfolio-content.md` file;
-// that file's frontmatter drives the card content. The site repo and the profile
-// repo are always excluded. Add a new repo with portfolio-content.md -> it appears
-// automatically on the next rebuild.
+// A repo is shown as a project ONLY if it contains a `portfolio-content.md` file.
+// That file's frontmatter drives the card; its body drives the detail page.
+// The site repo and the profile repo are always excluded. Add a new repo with a
+// portfolio-content.md -> it appears automatically on the next rebuild.
 
 const USER = 'ab17dogar';
 const EXCLUDE = new Set<string>(['ab17dogar.github.io', USER]);
 
 export interface GithubProject {
+  slug: string;       // internal detail-page slug, e.g. "project-csi"
   title: string;
   summary: string;
   tags: string[];
@@ -19,15 +20,16 @@ export interface GithubProject {
   language: string | null;
   stars: number;
   order: number;
+  body: string;       // markdown body of portfolio-content.md (detail page content)
 }
 
 // Used only if GitHub is unreachable at build time, so the section never renders empty.
 const FALLBACK: GithubProject[] = [
-  { title: 'VetraPath — Monte Carlo Path Tracer', summary: 'A physically-based Monte Carlo path tracer built from scratch in C++17, with an interactive real-time viewport, BVH acceleration, and AI denoising.', tags: ['Graphics', 'CV'], stack: ['C++17', 'OpenGL', 'Dear ImGui', 'Intel OIDN', 'CMake'], repoUrl: 'https://github.com/ab17dogar/Project-CSI', language: 'C++', stars: 0, order: 1 },
-  { title: 'RGB-D Semantic Scene Graphs', summary: 'An end-to-end pipeline turning egocentric RGB-D into 4-layer 3D semantic scene graphs, fusing open-vocabulary 2D foundation models with BIM/IFC priors.', tags: ['ML', 'CV'], stack: ['Python', 'PyTorch', 'Grounding DINO', 'SAM 2.1', 'Open3D', 'Docker'], repoUrl: 'https://github.com/ab17dogar/rgbd-scene-graph', language: 'Python', stars: 0, order: 2 },
+  { slug: 'project-csi', title: 'VetraPath — Monte Carlo Path Tracer', summary: 'A physically-based Monte Carlo path tracer built from scratch in C++17, with an interactive real-time viewport, BVH acceleration, and AI denoising.', tags: ['Graphics', 'CV'], stack: ['C++17', 'OpenGL', 'Dear ImGui', 'Intel OIDN', 'CMake'], repoUrl: 'https://github.com/ab17dogar/Project-CSI', language: 'C++', stars: 0, order: 1, body: '' },
+  { slug: 'rgbd-scene-graph', title: 'RGB-D Semantic Scene Graphs', summary: 'An end-to-end pipeline turning egocentric RGB-D into 4-layer 3D semantic scene graphs, fusing open-vocabulary 2D foundation models with BIM/IFC priors.', tags: ['ML', 'CV'], stack: ['Python', 'PyTorch', 'Grounding DINO', 'SAM 2.1', 'Open3D', 'Docker'], repoUrl: 'https://github.com/ab17dogar/rgbd-scene-graph', language: 'Python', stars: 0, order: 2, body: '' },
 ];
 
-export async function getGithubProjects(): Promise<GithubProject[]> {
+async function fetchProjects(): Promise<GithubProject[]> {
   const token = process.env.GITHUB_TOKEN; // higher rate limit in CI; optional locally
   const headers: Record<string, string> = {
     Accept: 'application/vnd.github+json',
@@ -51,8 +53,9 @@ export async function getGithubProjects(): Promise<GithubProject[]> {
         if (!cr.ok) return null; // no portfolio-content.md -> not a portfolio project
         const j: any = await cr.json();
         const md = Buffer.from(j.content, 'base64').toString('utf-8');
-        const { data } = matter(md);
+        const { data, content } = matter(md);
         return {
+          slug: r.name.toLowerCase(),
           title: (data.title as string) ?? r.name,
           summary: (data.summary as string) ?? r.description ?? '',
           tags: (data.tags as string[]) ?? r.topics ?? [],
@@ -62,6 +65,7 @@ export async function getGithubProjects(): Promise<GithubProject[]> {
           language: r.language ?? null,
           stars: r.stargazers_count ?? 0,
           order: typeof data.order === 'number' ? data.order : 999,
+          body: (content ?? '').trim(),
         };
       } catch {
         return null;
@@ -73,4 +77,10 @@ export async function getGithubProjects(): Promise<GithubProject[]> {
     .sort((a, b) => a.order - b.order || b.stars - a.stars);
 
   return projects.length > 0 ? projects : FALLBACK;
+}
+
+// Memoize so index + getStaticPaths share one fetch per build.
+let cache: Promise<GithubProject[]> | null = null;
+export function getGithubProjects(): Promise<GithubProject[]> {
+  return (cache ??= fetchProjects());
 }

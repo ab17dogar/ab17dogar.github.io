@@ -12,7 +12,17 @@ import ContactCTA from '../components/ContactCTA.astro';
 import { siteData } from '../data/siteData';
 import { getGithubProjects } from '../lib/github-projects';
 
-const projects = await getGithubProjects();
+const projects = (await getGithubProjects()).map((p) => ({
+  title: p.title,
+  summary: p.summary,
+  tags: p.tags,
+  stack: p.stack,
+  href: `/work/${p.slug}`,
+  repoUrl: p.repoUrl,
+  demo: p.demo,
+  language: p.language,
+  stars: p.stars,
+}));
 const research = (await getCollection('research')).sort((a, b) => b.data.year - a.data.year);
 ---
 <BaseLayout>

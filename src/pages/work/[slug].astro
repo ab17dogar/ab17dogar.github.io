@@ -1,0 +1,36 @@
+---
+import { marked } from 'marked';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getGithubProjects } from '../../lib/github-projects';
+
+export async function getStaticPaths() {
+  const projects = await getGithubProjects();
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const bodyHtml = project.body ? (marked.parse(project.body) as string) : '';
+---
+<BaseLayout title={project.title} description={project.summary}>
+  <article class="py-14">
+    <a href="/#projects" class="font-mono text-xs text-muted hover:text-text">← back to projects</a>
+    <p class="mt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-primary">// {project.tags.join(' · ')}</p>
+    <h1 class="mt-2 text-4xl font-bold tracking-tight">{project.title}</h1>
+    <p class="mt-3 max-w-2xl text-lg text-muted">{project.summary}</p>
+
+    {project.stack.length > 0 && (
+      <div class="mt-5 flex flex-wrap gap-1.5">
+        {project.stack.map((s) => (
+          <span class="rounded border border-line bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] text-muted">{s}</span>
+        ))}
+      </div>
+    )}
+
+    <div class="mt-5 flex flex-wrap gap-4 font-mono text-sm">
+      <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">repo →</a>
+      {project.demo && <a href={project.demo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">live demo →</a>}
+    </div>
+
+    {bodyHtml && <div class="prose-portfolio mt-10 max-w-2xl" set:html={bodyHtml} />}
+  </article>
+</BaseLayout>
