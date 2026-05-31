@@ -72,15 +72,13 @@ export default function ProjectCard({ project }: { project: ProjectCardData }) {
             ))}
           </div>
         )}
-        {(project.language || (project.stars ?? 0) > 0) && (
-          <div className="mt-3 flex items-center gap-3 font-mono text-[11px] text-muted">
-            {project.language && (
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-primary"></span>{project.language}</span>
-            )}
-            {(project.stars ?? 0) > 0 && <span>★ {project.stars}</span>}
-            <span className="ml-auto opacity-0 transition-opacity group-hover:opacity-100">details →</span>
-          </div>
-        )}
+        <div className="mt-3 flex items-center gap-3 font-mono text-[11px] text-muted">
+          {project.language && (
+            <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-primary"></span>{project.language}</span>
+          )}
+          {(project.stars ?? 0) > 0 && <span>★ {project.stars}</span>}
+          <span className="ml-auto text-primary transition-colors group-hover:text-accent">click for details →</span>
+        </div>
       </div>
     </motion.div>
   );

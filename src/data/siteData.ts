@@ -41,7 +41,7 @@ export const siteData = {
   aboutFacts: [
     { k: 'Role', v: 'Research Assistant · Backend Engineer' },
     { k: 'Stack', v: '.NET · Go · C++ · Python' },
-    { k: 'Based', v: 'Rostock, DE · CET' },
+    { k: 'Based', v: 'Rostock, DE (open to relocate)' },
     { k: 'Cert', v: 'AWS Certified Cloud Practitioner' },
     { k: 'Languages', v: 'English (C1) · Deutsch (A2)' },
     { k: 'Open to', v: 'Full-time · working-student · research' },
