@@ -23,6 +23,7 @@ const projects = (await getGithubProjects()).map((p) => ({
   demo: p.demo,
   language: p.language,
   stars: p.stars,
+  current: p.current,
 }));
 const research = (await getCollection('research')).sort((a, b) => b.data.year - a.data.year);
 ---

@@ -20,13 +20,14 @@ export interface GithubProject {
   language: string | null;
   stars: number;
   order: number;
+  current: boolean;   // ongoing project -> green signal (set `current: true` in portfolio-content.md)
   body: string;       // markdown body of portfolio-content.md (detail page content)
 }
 
 // Used only if GitHub is unreachable at build time, so the section never renders empty.
 const FALLBACK: GithubProject[] = [
-  { slug: 'project-csi', title: 'VetraPath — Monte Carlo Path Tracer', summary: 'A physically-based Monte Carlo path tracer built from scratch in C++17, with an interactive real-time viewport, BVH acceleration, and AI denoising.', tags: ['Graphics', 'CV'], stack: ['C++17', 'OpenGL', 'Dear ImGui', 'Intel OIDN', 'CMake'], repoUrl: 'https://github.com/ab17dogar/Project-CSI', language: 'C++', stars: 0, order: 1, body: '' },
-  { slug: 'rgbd-scene-graph', title: 'RGB-D Semantic Scene Graphs', summary: 'An end-to-end pipeline turning egocentric RGB-D into 4-layer 3D semantic scene graphs, fusing open-vocabulary 2D foundation models with BIM/IFC priors.', tags: ['ML', 'CV'], stack: ['Python', 'PyTorch', 'Grounding DINO', 'SAM 2.1', 'Open3D', 'Docker'], repoUrl: 'https://github.com/ab17dogar/rgbd-scene-graph', language: 'Python', stars: 0, order: 2, body: '' },
+  { slug: 'project-csi', title: 'VetraPath — Monte Carlo Path Tracer', summary: 'A physically-based Monte Carlo path tracer built from scratch in C++17, with an interactive real-time viewport, BVH acceleration, and AI denoising.', tags: ['Graphics', 'CV'], stack: ['C++17', 'OpenGL', 'Dear ImGui', 'Intel OIDN', 'CMake'], repoUrl: 'https://github.com/ab17dogar/Project-CSI', language: 'C++', stars: 0, order: 1, current: false, body: '' },
+  { slug: 'rgbd-scene-graph', title: 'RGB-D Semantic Scene Graphs', summary: 'An end-to-end pipeline turning egocentric RGB-D into 4-layer 3D semantic scene graphs, fusing open-vocabulary 2D foundation models with BIM/IFC priors.', tags: ['ML', 'CV'], stack: ['Python', 'PyTorch', 'Grounding DINO', 'SAM 2.1', 'Open3D', 'Docker'], repoUrl: 'https://github.com/ab17dogar/rgbd-scene-graph', language: 'Python', stars: 0, order: 2, current: true, body: '' },
 ];
 
 async function fetchProjects(): Promise<GithubProject[]> {
@@ -65,6 +66,7 @@ async function fetchProjects(): Promise<GithubProject[]> {
           language: r.language ?? null,
           stars: r.stargazers_count ?? 0,
           order: typeof data.order === 'number' ? data.order : 999,
+          current: data.current === true,
           body: (content ?? '').trim(),
         };
       } catch {
