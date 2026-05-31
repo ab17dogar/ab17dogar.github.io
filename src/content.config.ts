@@ -1,20 +1,9 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-const projects = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/projects' }),
-  schema: z.object({
-    title: z.string(),
-    summary: z.string(),
-    tags: z.array(z.enum(['ML', 'Web', 'Research', 'Cloud', 'LLM', 'CV', 'Graphics'])),
-    stack: z.array(z.string()),
-    repo: z.string().url().optional(),
-    demo: z.string().url().optional(),
-    cover: z.string().optional(),
-    featured: z.boolean().default(false),
-    order: z.number().default(0),
-  }),
-});
+// NOTE: Projects are no longer a local content collection — they are synced from
+// GitHub at build time (see src/lib/github-projects.ts), driven by each repo's
+// `portfolio-content.md`.
 
 const research = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/research' }),
@@ -40,4 +29,4 @@ const posts = defineCollection({
   }),
 });
 
-export const collections = { projects, research, posts };
+export const collections = { research, posts };

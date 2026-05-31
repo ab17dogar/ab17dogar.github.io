@@ -7,31 +7,13 @@ import AboutTeaser from '../components/AboutTeaser.astro';
 import Experience from '../components/Experience.astro';
 import SkillsGrid from '../components/SkillsGrid.tsx';
 import ProjectGrid from '../components/ProjectGrid.tsx';
-import GithubRepos from '../components/GithubRepos.astro';
 import ResearchList from '../components/ResearchList.astro';
-import BlogList from '../components/BlogList.astro';
 import ContactCTA from '../components/ContactCTA.astro';
 import { siteData } from '../data/siteData';
-import { sortByDateDesc } from '../lib/format';
+import { getGithubProjects } from '../lib/github-projects';
 
-const projects = (await getCollection('projects'))
-  .sort((a, b) => a.data.order - b.data.order)
-  .map((p) => ({
-    title: p.data.title,
-    summary: p.data.summary,
-    tags: p.data.tags,
-    stack: p.data.stack,
-    href: `/work/${p.id}`,
-    repo: p.data.repo,
-    demo: p.data.demo,
-  }));
-
+const projects = await getGithubProjects();
 const research = (await getCollection('research')).sort((a, b) => b.data.year - a.data.year);
-
-const posts = sortByDateDesc(
-  (await getCollection('posts')).filter((p) => !p.data.draft),
-  (p) => p.data.date,
-).slice(0, 4);
 ---
 <BaseLayout>
   <HeroBento />
@@ -47,16 +29,15 @@ const posts = sortByDateDesc(
   </section>
 
   <section id="projects" class="scroll-mt-24">
-    <SectionHeader title="Projects" note="// selected builds" />
+    <SectionHeader title="Projects" note="// synced from github" />
     <ProjectGrid client:visible projects={projects} />
-    <GithubRepos />
   </section>
 
   <section id="research" class="scroll-mt-24">
     <SectionHeader title="Research & Writing" note="// research + notes" />
     <ResearchList items={research} />
     <h3 class="mb-4 mt-12 font-mono text-xs uppercase tracking-[0.12em] text-muted">// writing</h3>
-    <BlogList posts={posts} />
+    <p class="font-mono text-sm text-muted">Coming soon .....</p>
   </section>
 
   <section id="skills" class="scroll-mt-24">
