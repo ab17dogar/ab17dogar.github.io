@@ -20,7 +20,7 @@ export const siteData = {
   // Web3Forms access key for the contact form (public by design).
   // Get a free key at https://web3forms.com (enter your email). Until set, the
   // contact form gracefully falls back to opening the visitor's email client.
-  contactAccessKey: '',
+  contactAccessKey: 'dc0b6309-66ca-4a9b-80cd-067c5094c4be',
 
   // Hero
   roles: ['Backend Engineer', 'Cloud Engineer', 'Graphics & 3D', 'Researcher'],
