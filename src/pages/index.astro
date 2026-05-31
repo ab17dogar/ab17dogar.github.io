@@ -7,6 +7,7 @@ import AboutTeaser from '../components/AboutTeaser.astro';
 import Experience from '../components/Experience.astro';
 import SkillsGrid from '../components/SkillsGrid.tsx';
 import ProjectGrid from '../components/ProjectGrid.tsx';
+import GithubRepos from '../components/GithubRepos.astro';
 import ResearchList from '../components/ResearchList.astro';
 import BlogList from '../components/BlogList.astro';
 import ContactCTA from '../components/ContactCTA.astro';
@@ -48,6 +49,7 @@ const posts = sortByDateDesc(
   <section id="projects" class="scroll-mt-24">
     <SectionHeader title="Projects" note="// selected builds" />
     <ProjectGrid client:visible projects={projects} />
+    <GithubRepos />
   </section>
 
   <section id="research" class="scroll-mt-24">
