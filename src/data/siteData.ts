@@ -52,10 +52,10 @@ export const siteData = {
     { key: 'focus', value: 'Backend · Cloud · AI', sub: 'core domains' },
   ] as Stat[],
 
+  // Email intentionally omitted here (it's covered by Say Hi, the contact CTA, and the form).
   socials: [
     { label: 'GitHub', href: 'https://github.com/ab17dogar' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/abdogar17/' },
-    { label: 'Email', href: 'mailto:10abdogar@gmail.com' },
   ] as Social[],
 
   nav: [
