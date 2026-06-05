@@ -10,8 +10,10 @@ import ProjectGrid from '../components/ProjectGrid.tsx';
 import ResearchList from '../components/ResearchList.astro';
 import ContactCTA from '../components/ContactCTA.astro';
 import ContactForm from '../components/ContactForm.astro';
+import WorkedWith from '../components/WorkedWith.astro';
 import { siteData } from '../data/siteData';
 import { getGithubProjects } from '../lib/github-projects';
+import { normalizeLinks } from '../lib/projects';
 
 const projects = (await getGithubProjects()).map((p) => ({
   title: p.title,
@@ -21,6 +23,8 @@ const projects = (await getGithubProjects()).map((p) => ({
   href: `/work/${p.slug}`,
   repoUrl: p.repoUrl,
   demo: p.demo,
+  image: p.image,
+  links: normalizeLinks(p),
   language: p.language,
   stars: p.stars,
   current: p.current,
@@ -28,7 +32,9 @@ const projects = (await getGithubProjects()).map((p) => ({
 const research = (await getCollection('research')).sort((a, b) => b.data.year - a.data.year);
 ---
 <BaseLayout>
-  <HeroBento />
+  <HeroBento projectCount={projects.length} />
+
+  <WorkedWith />
 
   <section id="about" class="scroll-mt-24">
     <SectionHeader title="About" note="// who i am" />

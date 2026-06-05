@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { gradientFor, initials, type ProjectLink } from '../lib/projects';
 
 export interface ProjectCardData {
   title: string;
@@ -9,6 +10,8 @@ export interface ProjectCardData {
   href: string;        // internal detail page
   repoUrl: string;     // GitHub repo
   demo?: string;
+  image?: string;
+  links?: ProjectLink[];
   language?: string | null;
   stars?: number;
   current?: boolean;   // ongoing -> green signal
@@ -48,6 +51,18 @@ export default function ProjectCard({ project }: { project: ProjectCardData }) {
 
       {/* Content is click-through (so the stretched link wins) except the GitHub icon */}
       <div className="pointer-events-none relative z-20 flex flex-1 flex-col">
+        <div className="mb-4 aspect-video w-full overflow-hidden rounded-[10px] border border-line">
+          {project.image ? (
+            <img src={project.image} alt="" loading="lazy" className="h-full w-full object-cover" />
+          ) : (
+            <div
+              className="flex h-full w-full items-center justify-center"
+              style={{ background: gradientFor(project.title) }}
+            >
+              <span className="font-mono text-2xl font-bold text-bg/80">{initials(project.title)}</span>
+            </div>
+          )}
+        </div>
         <div className="flex items-start justify-between gap-3">
           <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-primary">
             // {project.tags.join(' · ')}
@@ -70,6 +85,21 @@ export default function ProjectCard({ project }: { project: ProjectCardData }) {
               <span key={s} className="rounded border border-line bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] text-muted">
                 {s}
               </span>
+            ))}
+          </div>
+        )}
+        {project.links && project.links.length > 0 && (
+          <div className="pointer-events-auto mt-3 flex flex-wrap gap-1.5">
+            {project.links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 rounded border border-line bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] text-muted transition-colors hover:border-primary/40 hover:text-text"
+              >
+                {l.label} ↗
+              </a>
             ))}
           </div>
         )}

@@ -1,0 +1,20 @@
+---
+import { siteData } from '../data/siteData';
+---
+<section class="py-8">
+  <p class="mb-4 font-mono text-xs uppercase tracking-[0.12em] text-muted">// worked with &amp; studied at</p>
+  <div class="flex flex-wrap items-center gap-2">
+    {siteData.orgs.map((o) => (
+      o.href ? (
+        <a
+          href={o.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="rounded-full border border-line bg-white/[0.03] px-3 py-1 font-mono text-xs text-muted transition-colors hover:border-primary/40 hover:text-text"
+        >{o.name}</a>
+      ) : (
+        <span class="rounded-full border border-line bg-white/[0.03] px-3 py-1 font-mono text-xs text-muted">{o.name}</span>
+      )
+    ))}
+  </div>
+</section>

@@ -3,9 +3,18 @@ import { siteData } from '../data/siteData';
 import RotatingRole from './react/RotatingRole.tsx';
 import CountUp from './react/CountUp.tsx';
 import Reveal from './react/Reveal.tsx';
+
+interface Props { projectCount?: number }
+const { projectCount = 0 } = Astro.props;
+
+const stats = [
+  ...siteData.stats,
+  { key: 'projects', value: `${projectCount}+`, sub: 'shipped & synced' },
+  { key: 'domains', value: `${siteData.focusAreas.length}`, sub: 'focus areas' },
+];
 ---
 <section class="py-14 sm:py-20">
-  <div class="grid grid-cols-1 gap-4 md:grid-cols-[1.4fr_1fr] md:grid-rows-2">
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-[1.4fr_1fr] md:grid-rows-[auto_1fr]">
     <!-- Main tile -->
     <Reveal client:load className="glass relative row-span-2 overflow-hidden p-7 sm:p-9">
       <div class="absolute -right-1/5 -top-2/5 h-[120%] w-3/5" style="background:radial-gradient(circle,rgba(167,139,250,.30),transparent 60%)"></div>
@@ -25,19 +34,38 @@ import Reveal from './react/Reveal.tsx';
       </p>
     </Reveal>
 
-    <!-- Stat tiles -->
-    {siteData.stats.map((stat, idx) => (
-      <Reveal client:load delay={0.1 + idx * 0.08} className="glass p-6">
-        <p class="font-mono text-xs uppercase tracking-[0.12em] text-muted">// {stat.key}</p>
-        {/^\d/.test(stat.value) ? (
-          <p class="mt-2 text-3xl font-bold">
-            <CountUp client:visible to={parseInt(stat.value, 10)} suffix={stat.value.replace(/^\d+/, '')} />
-          </p>
-        ) : (
-          <p class="mt-2 text-xl font-bold leading-snug">{stat.value}</p>
-        )}
-        <p class="mt-1 text-sm text-muted">{stat.sub}</p>
-      </Reveal>
-    ))}
+    <!-- Photo tile -->
+    <Reveal client:load delay={0.08} className="glass flex items-center gap-4 overflow-hidden p-6">
+      <img
+        src="/my_pic.jpeg"
+        alt={siteData.name}
+        width="80"
+        height="80"
+        class="h-20 w-20 shrink-0 rounded-full object-cover ring-2 ring-primary/50"
+        style="box-shadow:0 0 28px rgba(167,139,250,.40)"
+      />
+      <div>
+        <p class="text-lg font-semibold tracking-tight">{siteData.name}</p>
+        <p class="mt-1 font-mono text-xs text-muted">{siteData.role}</p>
+        <p class="mt-0.5 font-mono text-xs text-muted">{siteData.location}</p>
+      </div>
+    </Reveal>
+
+    <!-- Stat tiles (2x2) -->
+    <Reveal client:load delay={0.16} className="grid grid-cols-2 gap-4">
+      {stats.map((stat) => (
+        <div class="glass p-5">
+          <p class="font-mono text-xs uppercase tracking-[0.12em] text-muted">// {stat.key}</p>
+          {/^\d/.test(stat.value) ? (
+            <p class="mt-2 text-3xl font-bold">
+              <CountUp client:visible to={parseInt(stat.value, 10)} suffix={stat.value.replace(/^\d+/, '')} />
+            </p>
+          ) : (
+            <p class="mt-2 text-xl font-bold leading-snug">{stat.value}</p>
+          )}
+          <p class="mt-1 text-sm text-muted">{stat.sub}</p>
+        </div>
+      ))}
+    </Reveal>
   </div>
 </section>

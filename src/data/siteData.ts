@@ -7,6 +7,7 @@ export interface Fact { k: string; v: string }
 export interface SkillCat { name: string; items: string[] }
 export interface Experience { period: string; role: string; org: string; note: string; current?: boolean }
 export interface Education { period: string; degree: string; school: string; note: string }
+export interface Org { name: string; href?: string }
 
 export const siteData = {
   name: 'Abu Bakar',
@@ -104,6 +105,15 @@ export const siteData = {
       note: 'A Chartered University · Honors.',
     },
   ] as Education[],
+
+  // "Worked with & studied at" strip
+  orgs: [
+    { name: 'Careem (Uber · e&)', href: 'https://www.careem.com' },
+    { name: 'NorthBay Solutions', href: 'https://www.northbaysolutions.com' },
+    { name: 'Universität Rostock', href: 'https://www.uni-rostock.de' },
+    { name: 'Forman Christian College University', href: 'https://www.fccollege.edu.pk' },
+    { name: 'AWS Certified Cloud Practitioner' },
+  ] as Org[],
 
   skills: [
     { name: 'Backend', items: ['GoLang', 'C#', '.NET Core', '.NET MVC', 'Entity Framework', 'RESTful APIs', 'SQL', 'PostgreSQL', 'PostGIS', 'Microservices'] },

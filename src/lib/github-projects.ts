@@ -1,4 +1,5 @@
 import matter from 'gray-matter';
+import type { ProjectLink } from './projects';
 
 // Build-time sync of portfolio projects from GitHub.
 // A repo is shown as a project ONLY if it contains a `portfolio-content.md` file.
@@ -17,6 +18,11 @@ export interface GithubProject {
   stack: string[];
   repoUrl: string;
   demo?: string;
+  image?: string;       // thumbnail/banner URL (optional; generated fallback otherwise)
+  webapp?: string;      // "Web App" link
+  appstore?: string;    // "iOS App" link
+  playstore?: string;   // "Android" link
+  links?: ProjectLink[]; // extra custom { label, href } links
   language: string | null;
   stars: number;
   order: number;
@@ -26,8 +32,8 @@ export interface GithubProject {
 
 // Used only if GitHub is unreachable at build time, so the section never renders empty.
 const FALLBACK: GithubProject[] = [
-  { slug: 'project-csi', title: 'VetraPath — Monte Carlo Path Tracer', summary: 'A physically-based Monte Carlo path tracer built from scratch in C++17, with an interactive real-time viewport, BVH acceleration, and AI denoising.', tags: ['Graphics', 'CV'], stack: ['C++17', 'OpenGL', 'Dear ImGui', 'Intel OIDN', 'CMake'], repoUrl: 'https://github.com/ab17dogar/Project-CSI', language: 'C++', stars: 0, order: 1, current: false, body: '' },
-  { slug: 'rgbd-scene-graph', title: 'RGB-D Semantic Scene Graphs', summary: 'An end-to-end pipeline turning egocentric RGB-D into 4-layer 3D semantic scene graphs, fusing open-vocabulary 2D foundation models with BIM/IFC priors.', tags: ['ML', 'CV'], stack: ['Python', 'PyTorch', 'Grounding DINO', 'SAM 2.1', 'Open3D', 'Docker'], repoUrl: 'https://github.com/ab17dogar/rgbd-scene-graph', language: 'Python', stars: 0, order: 2, current: true, body: '' },
+  { slug: 'project-csi', title: 'VetraPath — Monte Carlo Path Tracer', summary: 'A physically-based Monte Carlo path tracer built from scratch in C++17, with an interactive real-time viewport, BVH acceleration, and AI denoising.', tags: ['Graphics', 'CV'], stack: ['C++17', 'OpenGL', 'Dear ImGui', 'Intel OIDN', 'CMake'], repoUrl: 'https://github.com/ab17dogar/Project-CSI', demo: 'https://github.com/ab17dogar/Project-CSI', language: 'C++', stars: 0, order: 1, current: false, body: '' },
+  { slug: 'rgbd-scene-graph', title: 'RGB-D Semantic Scene Graphs', summary: 'An end-to-end pipeline turning egocentric RGB-D into 4-layer 3D semantic scene graphs, fusing open-vocabulary 2D foundation models with BIM/IFC priors.', tags: ['ML', 'CV'], stack: ['Python', 'PyTorch', 'Grounding DINO', 'SAM 2.1', 'Open3D', 'Docker'], repoUrl: 'https://github.com/ab17dogar/rgbd-scene-graph', webapp: 'https://github.com/ab17dogar/rgbd-scene-graph', language: 'Python', stars: 0, order: 2, current: true, body: '' },
 ];
 
 async function fetchProjects(): Promise<GithubProject[]> {
@@ -63,6 +69,11 @@ async function fetchProjects(): Promise<GithubProject[]> {
           stack: (data.stack as string[]) ?? [],
           repoUrl: r.html_url,
           demo: data.demo as string | undefined,
+          image: data.image as string | undefined,
+          webapp: data.webapp as string | undefined,
+          appstore: data.appstore as string | undefined,
+          playstore: data.playstore as string | undefined,
+          links: Array.isArray(data.links) ? (data.links as ProjectLink[]) : undefined,
           language: r.language ?? null,
           stars: r.stargazers_count ?? 0,
           order: typeof data.order === 'number' ? data.order : 999,
